@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+/**
+ *
+ * this is necessary to run Butterknife
+ * Start:
+ *
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+apply plugin: 'com.neenbedankt.android-apt'
+
+/**
+ *
+ * this is necessary to run Butterknife
+ * End.
+ *
+ */
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -25,4 +51,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
+    //**** For Butterknife
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    compile 'com.jakewharton:butterknife:8.1.0'
 }

@@ -26,10 +26,6 @@
             android:name=".ViewPhotoDetailsActivity">
         </activity>
 
-        <activity
-            android:name=".SearchHistoryActivity">
-        </activity>
-
     </application>
 
 </manifest>

@@ -42,7 +42,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        Photo photo = photos.get(position);
+
+        final Photo photo = photos.get(position);
         Picasso.with(context)
                 .load(photo.getUrl())
                 .resize(MAX_WIDTH, MAX_HEIGHT)
@@ -64,5 +65,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public int getItemCount() {
         return (null != photos) ? photos.size() : 0;
+    }
+
+    public Photo getPhoto(int position){
+        return (photos != null ? photos.get(position) : null );
     }
 }

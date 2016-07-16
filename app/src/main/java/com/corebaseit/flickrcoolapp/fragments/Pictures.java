@@ -1,6 +1,7 @@
 package com.corebaseit.flickrcoolapp.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.corebaseit.flickrcoolapp.R;
+import com.corebaseit.flickrcoolapp.RecyclerItemClickListener;
+import com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
 import com.corebaseit.flickrcoolapp.models.Photos;
 import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
@@ -33,7 +37,10 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
 
     @BindView(R.id.recycler_view)
     RecyclerView myRecyclerView;
+
+    private PhotoAdapter adapter;
     private SearchJSONObjects photoSearch;
+    private String EXTRA_PHOTO_TRANSFER = "PHOTO_URL";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,8 +54,6 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -84,10 +89,30 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     }
 
     @Override
-    public void OnPhotosReceived(Photos photos) {
+    public void OnPhotosReceived(final Photos photos) {
+
         if(photos == null || photos.getTotal() == 0){return;}
-        PhotoAdapter adapter = new PhotoAdapter(getActivity(), photos.getPhotos());
+
+        adapter = new PhotoAdapter(getActivity(), photos.getPhotos());
+
         myRecyclerView.setAdapter(adapter);
+
+        myRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), myRecyclerView,
+                new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getActivity(), "Press longer to see detail!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
+                        Intent intent = new Intent(getActivity(), ViewPhotoDetailsActivity.class);
+                        intent.putExtra(EXTRA_PHOTO_TRANSFER, photos.getPhotos().get(position).getUrl());
+                        startActivity(intent);
+                    }
+                }));
     }
 
     @Override

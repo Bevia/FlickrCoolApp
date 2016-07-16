@@ -1,9 +1,10 @@
 package com.corebaseit.flickrcoolapp.fragments;
 
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +12,13 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.corebaseit.flickrcoolapp.R;
-import com.corebaseit.flickrcoolapp.RecyclerItemClickListener;
-import com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
 import com.corebaseit.flickrcoolapp.models.Photos;
 import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
@@ -38,9 +38,16 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @BindView(R.id.recycler_view)
     RecyclerView myRecyclerView;
 
+    @BindView(R.id.editSearch)
+    EditText editSearch;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
     private PhotoAdapter adapter;
     private SearchJSONObjects photoSearch;
     private String EXTRA_PHOTO_TRANSFER = "PHOTO_URL";
+    private String EXTRA_TEXT_TRANSFER = "TITLE_JSON";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,18 +69,35 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
 
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         initView();
+
+        fab.setVisibility(View.GONE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideTheSoftKeyboardIfStillShown();
+            }
+        });
     }
 
     private void initView(){
 
         photoSearch = new SearchJSONObjects(getActivity(), this);
 
-        ((EditText)getActivity().findViewById(R.id.editSearch)).addTextChangedListener(new TextWatcher() {
+        editSearch.setOnTouchListener(new View.OnTouchListener(){
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                // make fab visible againg...
+                fab.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        editSearch.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) { fab.setVisibility(View.VISIBLE);}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -94,25 +118,20 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         if(photos == null || photos.getTotal() == 0){return;}
 
         adapter = new PhotoAdapter(getActivity(), photos.getPhotos());
-
         myRecyclerView.setAdapter(adapter);
 
-        myRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), myRecyclerView,
-                new RecyclerItemClickListener.OnItemClickListener() {
+    }
 
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Toast.makeText(getActivity(), "Press longer to see detail!", Toast.LENGTH_SHORT).show();
-                    }
+    public void hideTheSoftKeyboardIfStillShown() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+        fab.setVisibility(View.GONE);
+        }
 
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-
-                        Intent intent = new Intent(getActivity(), ViewPhotoDetailsActivity.class);
-                        intent.putExtra(EXTRA_PHOTO_TRANSFER, photos.getPhotos().get(position).getUrl());
-                        startActivity(intent);
-                    }
-                }));
+    @Override
+    public void onResume() {
+        super.onResume();
+        fab.setVisibility(View.GONE);
     }
 
     @Override

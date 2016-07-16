@@ -6,4 +6,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_search">Search</string>
+    <string name="sharing">Social Sharing</string>
+    <string name="text_view_row">Title</string>
+    <string name="detailViewMainText">Detail View - Share your favorite pics!</string>
 </resources>

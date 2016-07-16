@@ -26,7 +26,6 @@ public class History extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -39,16 +38,6 @@ public class History extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // Reload current fragment
-       /* Fragment frg = null;
-        frg = getActivity().getSupportFragmentManager()
-                .findFragmentByTag("Your_Fragment_TAG");
-        final FragmentTransaction ft =
-                getActivity().getSupportFragmentManager().beginTransaction();
-        ft.detach(frg);
-        ft.attach(frg);
-        ft.commit();*/
 
         initView();
     }

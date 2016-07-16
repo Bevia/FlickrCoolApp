@@ -1,58 +1,133 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:flickr="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/myToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/mainTtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="15dp"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_below="@+id/myToolbar"
+        android:gravity="center"
+        android:text="@string/detailViewMainText"
+        android:textColor="@color/navyblue"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/cardViewImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@id/mainTtext"
+        android:visibility="visible">
 
-        <!--<include
-            android:id="@+id/app_bar"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"/>-->
-
-        <android.support.v7.widget.CardView
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mainViewCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            flickr:cardBackgroundColor="?colorPrimary"
-            flickr:cardCornerRadius="8dp"
-            flickr:cardPreventCornerOverlap="false"
-            flickr:contentPaddingTop="16dp"
-            flickr:contentPaddingBottom="16dp">
+            android:layout_marginTop="10dp"
+            card_view:cardBackgroundColor="?colorPrimary"
+            card_view:cardCornerRadius="8dp"
+            card_view:cardPreventCornerOverlap="false"
+            card_view:contentPaddingBottom="16dp"
+            card_view:contentPaddingTop="16dp">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <FrameLayout
+                <ImageView
+                    android:id="@+id/photo_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/textColorPrimary"
+                    android:layout_margin="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder" />
 
-                    <ImageView
-                        android:id="@+id/photo_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="8dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder"/>
+                <ImageView
+                    android:id="@+id/zoomImage"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/banner_zoom"
+                    android:padding="2dp"
+                    android:visibility="visible" />
 
-
-                </FrameLayout>
-
-            </LinearLayout>
-
+            </FrameLayout>
         </android.support.v7.widget.CardView>
 
-    </LinearLayout>
-</ScrollView>
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainViewCardView"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="3"
+            android:textColor="@color/navyblue"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fullSizeImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageFullSizeImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+        <ImageView
+            android:id="@+id/zoomOutImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="24dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/banner_zoom_out"
+            android:padding="2dp" />
+    </FrameLayout>
+</RelativeLayout>
+
+

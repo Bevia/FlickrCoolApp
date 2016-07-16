@@ -1,14 +1,16 @@
 package com.corebaseit.flickrcoolapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.corebaseit.flickrcoolapp.models.Photo;
 import com.corebaseit.flickrcoolapp.R;
+import com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity;
+import com.corebaseit.flickrcoolapp.models.Photo;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +25,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private List<Photo> photos;
     final int MAX_WIDTH = 430;
     final int MAX_HEIGHT = 620;
+    private String EXTRA_PHOTO_TRANSFER = "PHOTO_URL";
+    private String EXTRA_TEXT_TRANSFER = "TITLE_JSON";
 
     public PhotoAdapter(FragmentActivity context, List<Photo> photos) {
 
@@ -59,15 +63,22 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
                     }
                 });
 
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, ViewPhotoDetailsActivity.class);
+                intent.putExtra(EXTRA_PHOTO_TRANSFER, photo.getUrl());
+                intent.putExtra(EXTRA_TEXT_TRANSFER, photo.getTitle());
+                context.startActivity(intent);
+            }
+        });
+
         holder.textTitle.setText(photo.getTitle());
     }
 
     @Override
     public int getItemCount() {
         return (null != photos) ? photos.size() : 0;
-    }
-
-    public Photo getPhoto(int position){
-        return (photos != null ? photos.get(position) : null );
     }
 }

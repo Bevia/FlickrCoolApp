@@ -1,7 +1,6 @@
 package com.corebaseit.flickrcoolapp.fragments;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
-import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
-import com.corebaseit.flickrcoolapp.models.Photos;
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
+import com.corebaseit.flickrcoolapp.models.Photos;
+import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,11 +34,6 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @BindView(R.id.recycler_view)
     RecyclerView myRecyclerView;
     private SearchJSONObjects photoSearch;
-    private Context context;
-
-    public Pictures() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +75,6 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
                 if(!TextUtils.isEmpty(s)){
                     LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
-
                     myRecyclerView.setLayoutManager(llm);
                     myRecyclerView.setAdapter(null);
                     photoSearch.search(s.toString());
@@ -93,24 +85,14 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
 
     @Override
     public void OnPhotosReceived(Photos photos) {
-        if(photos == null || photos.getTotal() == 0){
-
-            return;
-        }
-
+        if(photos == null || photos.getTotal() == 0){return;}
         PhotoAdapter adapter = new PhotoAdapter(getActivity(), photos.getPhotos());
         myRecyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void OnError(VolleyError error) {
-
-    }
-
-    @Override
     public void onStop() {
         photoSearch.stop();
-
         super.onStop();
     }
 }

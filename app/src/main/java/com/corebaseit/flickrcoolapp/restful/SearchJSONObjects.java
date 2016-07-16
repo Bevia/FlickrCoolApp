@@ -22,8 +22,7 @@ public class SearchJSONObjects extends VolleyResponseListener<SearchJSONResponse
         implements Response.ErrorListener{
 
     public interface OnPhotosReceivedListener{
-        public void OnPhotosReceived(Photos photos);
-        public void OnError(VolleyError error);
+        void OnPhotosReceived(Photos photos);
     }
 
     private OnPhotosReceivedListener onPhotosReceivedListener;

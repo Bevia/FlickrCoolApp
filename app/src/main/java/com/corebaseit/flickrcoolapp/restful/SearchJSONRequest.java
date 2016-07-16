@@ -36,7 +36,6 @@ public class SearchJSONRequest extends JsonObjectRequest {
         return sb.toString();
     }
 
-
     public SearchJSONRequest(String tags, Listener<JSONObject> listener, ErrorListener errorListener) {
         super(Method.GET, String.format(URL, tags), listener, errorListener);
         setRetryPolicy(new DefaultRetryPolicy(

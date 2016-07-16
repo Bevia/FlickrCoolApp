@@ -11,7 +11,7 @@ public class Arguments {
 
     //To return an API response in JSON format, send a parameter "format" in the request with a value of "json".
     //If you just want the raw JSON, with no function wrapper, add the parameter nojsoncallback with a value of 1 to your request.
-    private static final String FORMAT = "json&nojsoncallback";
+    private static final String FORMAT = "json&nojsoncallback=1";
 
     public static int getPerPage() {
         return PER_PAGE;

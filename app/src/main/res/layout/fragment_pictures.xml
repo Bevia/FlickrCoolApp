@@ -1,15 +1,21 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.Pictures">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"  tools:context=".MainActivity"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editSearch"
+        android:layout_alignTop="@+id/listView"
+        android:layout_above="@+id/listView"
         android:hint="tags"/>
+
+    <!-- <ListView
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:id="@+id/listView"
+         />-->
 
     <view
         android:id="@+id/recycler_view"
@@ -18,4 +24,4 @@
         android:layout_below="@+id/editSearch"
         class="android.support.v7.widget.RecyclerView"/>
 
-</RelativeLayout>
+</LinearLayout>

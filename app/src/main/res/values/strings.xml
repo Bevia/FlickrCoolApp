@@ -4,9 +4,11 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Will be working on it pretty soon ;)</string>
     <string name="action_search">Search</string>
     <string name="sharing">Social Sharing</string>
     <string name="text_view_row">Title</string>
     <string name="detailViewMainText">Detail View - Share your favorite pics!</string>
+    <string name="action_about">About</string>
+    <string name="about">This App has been designed and is maintained by Vincent Bevia</string>
 </resources>

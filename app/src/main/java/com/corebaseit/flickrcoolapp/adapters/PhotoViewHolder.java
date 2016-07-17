@@ -7,16 +7,20 @@ import android.widget.TextView;
 
 import com.corebaseit.flickrcoolapp.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by vbevia on 15/07/16.
  */
 public class PhotoViewHolder extends RecyclerView.ViewHolder {
-    protected ImageView imageView;
-    protected TextView textTitle;
+
+    @BindView(R.id.imageView) ImageView imageView;
+    @BindView(R.id.textTitle) TextView textTitle;
 
     public PhotoViewHolder(View view) {
         super(view);
-        imageView = (ImageView) view.findViewById(R.id.imageView);
-        textTitle = (TextView) view.findViewById(R.id.textTitle);
+
+        ButterKnife.bind(this, view);
     }
 }

@@ -26,3 +26,25 @@ The App has been deigned with Android Studio 2.1.2
             apt 'com.jakewharton:butterknife-compiler:8.1.0'
             compile 'com.jakewharton:butterknife:8.1.0'
         }
+
+Added Fabric with Crashlytics for distribution and crashlytics for crash reporting solutions
+(https://try.crashlytics.com/)
+
+            repositories {
+                maven { url 'https://maven.fabric.io/public' }
+            }
+            
+            buildscript {
+                repositories {
+                    mavenCentral()
+                    maven { url 'https://maven.fabric.io/public' }
+                }
+                dependencies {
+                    classpath 'com.android.tools.build:gradle:2.0.0'
+                    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+                    classpath 'io.fabric.tools:gradle:1.+'
+                }
+            }
+            
+            apply plugin: 'com.neenbedankt.android-apt'
+          

@@ -22,7 +22,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -67,8 +69,11 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
     @BindView(R.id.fullSizeImage)
     FrameLayout fullSizeImage;
 
-    @BindView(R.id.cardViewImage)
-    RelativeLayout cardViewImage;
+    @BindView(R.id.mainScrollView)
+    ScrollView mainScrollView;
+
+    @BindView(R.id.favoriteImageText)
+    RelativeLayout favoriteImageText;
 
     private Context context;
     private View decorView;
@@ -153,7 +158,7 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 fullSizeImage.setVisibility(View.VISIBLE);
-                cardViewImage.setVisibility(View.GONE);
+                mainScrollView.setVisibility(View.GONE);
 
                 /**
                  *   Moving to full SIZE Image, lets hide the toolbar and the navigation bar!
@@ -168,7 +173,7 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 fullSizeImage.setVisibility(View.GONE);
-                cardViewImage.setVisibility(View.VISIBLE);
+                mainScrollView.setVisibility(View.VISIBLE);
 
                 /**
                  *   Recover the toolbar and the navigation bar!
@@ -177,6 +182,15 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                 decorView = getWindow().getDecorView();
                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
                 decorView.setSystemUiVisibility(uiOptions);
+            }
+        });
+
+        favoriteImageText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(ViewPhotoDetailsActivity.this, "Will be available in next version ;)", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -265,6 +279,10 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
+
+    /**
+     * Saving favorite...
+     */
 
     @Override
     protected void onResume() {

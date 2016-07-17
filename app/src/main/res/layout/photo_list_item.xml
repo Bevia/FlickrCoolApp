@@ -4,17 +4,20 @@
     android:layout_height="match_parent"
     android:background="@color/grey_bevia2"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="2dp">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_top1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="240dp"
         android:layout_gravity="center_vertical"
-        card_view:cardCornerRadius="6dp"
-        card_view:cardElevation="6dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        card_view:contentPadding="0dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
             android:id="@+id/centralView"
@@ -26,7 +29,7 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="190dp"
                 android:scaleType="centerCrop"/>
 
             <TextView

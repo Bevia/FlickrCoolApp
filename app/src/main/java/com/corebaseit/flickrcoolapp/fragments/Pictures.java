@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
@@ -115,7 +116,10 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @Override
     public void OnPhotosReceived(final Photos photos) {
 
-        if(photos == null || photos.getTotal() == 0){return;}
+        if(photos == null || photos.getTotal() == 0){
+            Toast.makeText(getActivity(), R.string.no_results, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         adapter = new PhotoAdapter(getActivity(), photos.getPhotos());
         myRecyclerView.setAdapter(adapter);

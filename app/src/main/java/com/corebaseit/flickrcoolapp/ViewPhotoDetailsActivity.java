@@ -1,9 +1,11 @@
 package com.corebaseit.flickrcoolapp;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,11 +13,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,12 +81,16 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
 
     private Context context;
     private View decorView;
+    private String TAG = "permissions";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_details);
         ButterKnife.bind(this);
+
+        //add permission for Marshmallow
+        isStoragePermissionGranted();
 
         Bundle extras = getIntent().getExtras();
         TAG_GET_PICTURE_URL = extras.getString(EXTRA_PHOTO_TRANSFER);
@@ -232,7 +240,42 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
      *
      */
 
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+            return true;
+        }
+
+
+    }
+
     private Uri getBitmapFromAsset() {
+
+        /*if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},23
+                );
+            }
+        }*/
 
         Drawable mDrawable = photoImageFullSize.getDrawable();
         Bitmap mBitmap = ((BitmapDrawable)mDrawable).getBitmap();
@@ -278,19 +321,5 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
-    }
-
-    /**
-     * Saving favorite...
-     */
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

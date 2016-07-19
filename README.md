@@ -27,7 +27,7 @@ The App has been deigned with Android Studio 2.1.2
             compile 'com.jakewharton:butterknife:8.1.0'
         }
 
-Added Fabric with Crashlytics for distribution and crashlytics for crash reporting solutions
+Added Fabric for distribution and crashlytics for crash reporting solutions
 (https://try.crashlytics.com/)
 
             repositories {

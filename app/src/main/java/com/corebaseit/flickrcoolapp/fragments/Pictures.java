@@ -117,9 +117,7 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
             @Override
             public void afterTextChanged(Editable s) {
                 if (!internetConnectivityCheker.isOnline(getActivity())) {
-                    hideTheSoftKeyboardIfStillShown();
                     toastNoInternetConnection();
-                    /*Toast.makeText(getActivity(), "You must have internet connection to use this feature!", Toast.LENGTH_SHORT).show();*/
                 } else {
                     if (!TextUtils.isEmpty(s)) {
                         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -189,6 +187,9 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
       */
 
     public void toastNoInternetConnection() {
+
+        hideTheSoftKeyboardIfStillShown();
+        fab.setVisibility(View.GONE);
 
         Context context = getActivity().getApplicationContext();
         LayoutInflater inflater = getActivity().getLayoutInflater();

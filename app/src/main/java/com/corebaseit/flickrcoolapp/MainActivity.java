@@ -17,14 +17,14 @@ import android.view.Window;
 import com.corebaseit.flickrcoolapp.fragments.Favorites;
 import com.corebaseit.flickrcoolapp.fragments.History;
 import com.corebaseit.flickrcoolapp.fragments.Pictures;
-
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by vbevia on 15/07/16.

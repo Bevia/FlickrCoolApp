@@ -12,4 +12,5 @@
     <string name="action_about">About</string>
     <string name="about">This App has been designed and is maintained by Vincent Bevia</string>
     <string name="no_results">No results for your request were found</string>
+    <string name="you_must_have_internet_connection_to_use_this_feature">You must have internet connection to use this feature!</string>
 </resources>

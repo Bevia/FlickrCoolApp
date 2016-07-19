@@ -15,7 +15,6 @@ import com.corebaseit.flickrcoolapp.R;
  */
 public class Favorites extends Fragment {
 
-
     public Favorites() {
         // Required empty public constructor
     }
@@ -25,7 +24,9 @@ public class Favorites extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
-    }
+        View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
 
+        return rootView;
+
+    }
 }

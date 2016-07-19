@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.corebaseit.flickrcoolapp.InternetConnectivityCheker;
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
 import com.corebaseit.flickrcoolapp.models.Photos;
@@ -27,14 +30,20 @@ import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosReceivedListener{
+public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosReceivedListener {
 
     private Unbinder gridViewBinder;
+
+    private final InternetConnectivityCheker internetConnectivityCheker =
+            new InternetConnectivityCheker();
+
+    private Context context;
 
     @BindView(R.id.recycler_view)
     RecyclerView myRecyclerView;
@@ -69,7 +78,13 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         super.onActivityCreated(savedInstanceState);
 
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         initView();
+    }
+
+    private void initView() {
+
+        photoSearch = new SearchJSONObjects(getActivity(), this);
 
         fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,16 +93,12 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
                 hideTheSoftKeyboardIfStillShown();
             }
         });
-    }
 
-    private void initView(){
-
-        photoSearch = new SearchJSONObjects(getActivity(), this);
-
-        editSearch.setOnTouchListener(new View.OnTouchListener(){
+        editSearch.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 // make fab visible againg...
                 fab.setVisibility(View.VISIBLE);
+                /*editSearch.setText(" ");*/
                 return false;
             }
         });
@@ -95,19 +106,28 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         editSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { fab.setVisibility(View.VISIBLE);}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                fab.setVisibility(View.VISIBLE);
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!TextUtils.isEmpty(s)){
-                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                    llm.setOrientation(LinearLayoutManager.VERTICAL);
-                    myRecyclerView.setLayoutManager(llm);
-                    myRecyclerView.setAdapter(null);
-                    photoSearch.search(s.toString());
+                if (!internetConnectivityCheker.isOnline(getActivity())) {
+                    hideTheSoftKeyboardIfStillShown();
+                    toastNoInternetConnection();
+                    /*Toast.makeText(getActivity(), "You must have internet connection to use this feature!", Toast.LENGTH_SHORT).show();*/
+                } else {
+                    if (!TextUtils.isEmpty(s)) {
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                        llm.setOrientation(LinearLayoutManager.VERTICAL);
+                        myRecyclerView.setLayoutManager(llm);
+                        myRecyclerView.setAdapter(null);
+                        photoSearch.search(s.toString());
+                    }
                 }
             }
         });
@@ -116,7 +136,7 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @Override
     public void OnPhotosReceived(final Photos photos) {
 
-        if(photos == null || photos.getTotal() == 0){
+        if (photos == null || photos.getTotal() == 0) {
             Toast.makeText(getActivity(), R.string.no_results, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -130,11 +150,65 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
         fab.setVisibility(View.GONE);
+    }
+
+    private void showNoInternetConnectionAlertDialog() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Warning")
+                .setContentText("You must have internet connection to use this feature!")
+                .setConfirmText("OK")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                      /*  editSearch.setText(" ");*/
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        // Is the fragment visible?
+        if (this.isVisible()) {
+            // yes, the fragment is visible...
+            if (!isVisibleToUser) {
+                // No, the fragment is NOT visible...then, hide the soft keyboard!
+                Log.d("Framents", " Pictures " + "Not visible anymore");
+                fab.setVisibility(View.GONE);
+                InputMethodManager tclOff = (InputMethodManager)
+                        getActivity().getSystemService(context.INPUT_METHOD_SERVICE);
+                tclOff.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
         }
+    }
+
+    /**
+     *  Toast: NO INTERNET CONNECTION!
+      */
+
+    public void toastNoInternetConnection() {
+
+        Context context = getActivity().getApplicationContext();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        View customToastroot = inflater.inflate(R.layout.mycustom_toast, null);
+        Toast customtoast = new Toast(context);
+        customtoast.setView(customToastroot);
+
+        customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL,0, 0);
+        customtoast.setDuration(Toast.LENGTH_LONG);
+        customtoast.show();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (!internetConnectivityCheker.isOnline(getActivity())) {
+            hideTheSoftKeyboardIfStillShown();
+            showNoInternetConnectionAlertDialog();
+        }
         fab.setVisibility(View.GONE);
     }
 

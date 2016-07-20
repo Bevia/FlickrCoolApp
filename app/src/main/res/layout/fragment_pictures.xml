@@ -9,15 +9,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/editTextInput"
+            style="@style/texts.medium"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/editSearch"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/listView"
-                android:layout_alignTop="@+id/listView"
-                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:tag="@string/search"
+                android:hint="@string/search"
+                android:textSize="20sp"
+                android:maxLines="1"
+                android:lines="1"
                 android:gravity="center"
-                android:hint="search..." />
+                style="@style/editTextAccess"/>
+        </android.support.design.widget.TextInputLayout>
 
             <ImageView
                 android:id="@+id/imageView1"

@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#125688</color>
-    <color name="colorPrimaryDark">#125688</color>
+    <color name="colorPrimary">#1A237E</color>
+    <color name="colorPrimaryDark">#1A237E</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#1A237E</color>
+
+    <!--<color name="colorAccent">#ffFC3667</color>
+    <color name="colorPrimary">#ff4DCFB2</color>-->
+
+    <color name="black_midnight">#ff242424</color>
+
+    <color name="grey_ash">#ff919191</color>
+    <color name="grey_dusty">#ffE9E9E9</color>
+    <color name="grey500">#607D8B</color>
+    <color name="grey700">#455A64</color>
+    <color name="grey900">#263238</color>
+
+    <color name="green_wasabi_translucent">#554DCFB2</color>
+    <color name="green_wasabi">#ff4DCFB2</color>   <!--This one too!!!-->
+    <color name="green_wasabi_light">#994DCFB2</color>
+    <color name="green_cactus">#ff43AF97</color>
+
+    <color name="pink_cherry">#ffFC3667</color> <!-- This one!!!-->
+    <color name="pink_ruby">#ffDB2E59</color>
+
+
+    <color name="white_ghost">#ffFAFBFD</color>
 
     <!-- google's material design colours from
 http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->

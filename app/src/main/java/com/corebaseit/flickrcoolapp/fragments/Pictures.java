@@ -2,6 +2,7 @@ package com.corebaseit.flickrcoolapp.fragments;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -94,6 +95,8 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
             }
         });
 
+        editSearch.setTypeface(Typeface.
+                createFromAsset(getContext().getAssets(), "fonts/Quattrocento Regular.ttf"));
         editSearch.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 // make fab visible againg...

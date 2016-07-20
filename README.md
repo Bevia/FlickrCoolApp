@@ -50,8 +50,5 @@ Added Fabric for distribution and crashlytics for crash reporting solutions
           
             Snapshots:
             
-![main1](https://cloud.githubusercontent.com/assets/1615724/16981095/624cb54c-4e69-11e6-9878-15f0977140c8.png)
-
-![main2](https://cloud.githubusercontent.com/assets/1615724/16981130/7b6f348c-4e69-11e6-8a0d-41138b51872f.png)
 
 

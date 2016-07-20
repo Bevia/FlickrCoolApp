@@ -14,4 +14,5 @@
     <string name="no_results">No results for your request were found</string>
     <string name="you_must_have_internet_connection_to_use_this_feature">You must have internet connection to use this feature!</string>
     <string name="search">Type tag name to begin the search:</string>
+    <string name="editTextTag">Barcelona</string>
 </resources>

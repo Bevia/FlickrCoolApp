@@ -47,6 +47,9 @@ import butterknife.ButterKnife;
 
 public class ViewPhotoDetailsActivity extends AppCompatActivity {
 
+    private final InternetConnectivityCheker internetConnectivityCheker =
+            new InternetConnectivityCheker();
+
     private String TAG_GET_PICTURE_URL;
     private String TAG_GET_TITLE;
     private String EXTRA_TEXT_TRANSFER = "TITLE_JSON";
@@ -124,8 +127,6 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(TAG_GET_PICTURE_URL)
                 .placeholder(R.drawable.placeholder)
-                /*.diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)*/
                 .animate(animationObject)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
@@ -149,7 +150,6 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                 .load(TAG_GET_PICTURE_URL)
                 .resize(MAX_WIDTH, MAX_HEIGHT)
                 .centerInside()
-                /*.memoryPolicy(MemoryPolicy.NO_CACHE)*/
                 .into(photoImageFullSize, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -165,14 +165,13 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                fullSizeImage.setVisibility(View.VISIBLE);
-                mainScrollView.setVisibility(View.GONE);
-
-                /**
-                 *   Moving to full SIZE Image, lets hide the toolbar and the navigation bar!
-                 */
-                toolbar.setVisibility(View.GONE);
-                hideNavigationBar();
+                    fullSizeImage.setVisibility(View.VISIBLE);
+                    mainScrollView.setVisibility(View.GONE);
+                    /**
+                     *   Moving to full SIZE Image, lets hide the toolbar and the navigation bar!
+                     */
+                    toolbar.setVisibility(View.GONE);
+                    hideNavigationBar();
             }
         });
 
@@ -182,7 +181,6 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
 
                 fullSizeImage.setVisibility(View.GONE);
                 mainScrollView.setVisibility(View.VISIBLE);
-
                 /**
                  *   Recover the toolbar and the navigation bar!
                  */
@@ -230,55 +228,41 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
 
         if (id == R.id.sharing) {
 
-            shareImage();
+            if (internetConnectivityCheker.isOnline(ViewPhotoDetailsActivity.this)) {
+                shareImage();
+            } else {
+                internetConnectivityCheker.showNoInternetConnectionAlertDialog(ViewPhotoDetailsActivity.this);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
      * Share text and image over Social Networks...
-     *
      */
 
-    public  boolean isStoragePermissionGranted() {
+    public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
+                Log.v(TAG, "Permission is granted");
                 return true;
             } else {
 
-                Log.v(TAG,"Permission is revoked");
+                Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
             return true;
         }
-
-
     }
 
     private Uri getBitmapFromAsset() {
 
-        /*if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},23
-                );
-            }
-        }*/
-
         Drawable mDrawable = photoImageFullSize.getDrawable();
-        Bitmap mBitmap = ((BitmapDrawable)mDrawable).getBitmap();
+        Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
 
         String path = MediaStore.Images.Media.insertImage(getContentResolver(),
                 mBitmap, "Image Description", null);
@@ -310,10 +294,10 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
     }
 
     public void hideNavigationBar() {
-        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) {
             View v = this.getWindow().getDecorView();
             v.setSystemUiVisibility(View.GONE);
-        } else if(Build.VERSION.SDK_INT >= 19) {
+        } else if (Build.VERSION.SDK_INT >= 19) {
             View decorView = getWindow().getDecorView();
             int uiOptions =
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

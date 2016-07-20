@@ -19,20 +19,14 @@ public class InternetConnectivityCheker {
         }
     }
 
-    public void showNoInternetConnectionAlertDialogStay(Context context) {
+    public void showNoInternetConnectionAlertDialog(Context context) {
         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("¡Error de conexión!")
-                .setContentText("Asegurate de que tienes conexión a internet")
-                .setConfirmText("Aceptar")
+                .setTitleText("Warning")
+                .setContentText("You must have internet connection to use this feature!")
+                .setConfirmText("OK")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        //reuse previous dialog instance
-                        /*sDialog.setTitleText("Deleted!")
-                                .setContentText("Your imaginary file has been deleted!")
-                                .setConfirmText("OK")
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);*/
                         sDialog.dismissWithAnimation();
                     }
                 })

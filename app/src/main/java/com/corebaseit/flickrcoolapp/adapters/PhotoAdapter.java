@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.corebaseit.flickrcoolapp.InternetConnectivityCheker;
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity;
 import com.corebaseit.flickrcoolapp.models.Photo;
@@ -27,6 +28,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     final int MAX_HEIGHT = 620;
     private String EXTRA_PHOTO_TRANSFER = "PHOTO_URL";
     private String EXTRA_TEXT_TRANSFER = "TITLE_JSON";
+    private final InternetConnectivityCheker internetConnectivityCheker =
+            new InternetConnectivityCheker();
 
     public PhotoAdapter(FragmentActivity context, List<Photo> photos) {
 
@@ -63,16 +66,21 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
                     }
                 });
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                Intent intent = new Intent(context, ViewPhotoDetailsActivity.class);
-                intent.putExtra(EXTRA_PHOTO_TRANSFER, photo.getUrl());
-                intent.putExtra(EXTRA_TEXT_TRANSFER, photo.getTitle());
-                context.startActivity(intent);
-            }
-        });
+                    if (internetConnectivityCheker.isOnline(context)) {
+                    Intent intent = new Intent(context, ViewPhotoDetailsActivity.class);
+                    intent.putExtra(EXTRA_PHOTO_TRANSFER, photo.getUrl());
+                    intent.putExtra(EXTRA_TEXT_TRANSFER, photo.getTitle());
+                    context.startActivity(intent);
+
+                    } else {
+                        internetConnectivityCheker.showNoInternetConnectionAlertDialog(context);
+                    }
+                }
+            });
 
         holder.textTitle.setText(photo.getTitle());
     }

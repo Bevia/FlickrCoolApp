@@ -2,11 +2,16 @@ package com.corebaseit.flickrcoolapp.fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -20,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.corebaseit.flickrcoolapp.InternetConnectivityCheker;
@@ -31,7 +37,6 @@ import com.corebaseit.flickrcoolapp.restful.SearchJSONObjects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -55,10 +60,15 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+
+    final int version = Build.VERSION.SDK_INT;
     private PhotoAdapter adapter;
     private SearchJSONObjects photoSearch;
     private String EXTRA_PHOTO_TRANSFER = "PHOTO_URL";
     private String EXTRA_TEXT_TRANSFER = "TITLE_JSON";
+    private String TAG_EDIT_SEARCH_DISABLE;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,9 +94,8 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
     }
 
     private void initView() {
-
         photoSearch = new SearchJSONObjects(getActivity(), this);
-
+        TAG_EDIT_SEARCH_DISABLE = "no";
         fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +109,7 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         editSearch.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 // make fab visible againg...
+                if(TAG_EDIT_SEARCH_DISABLE.equals("yes"))
                 fab.setVisibility(View.VISIBLE);
                 /*editSearch.setText(" ");*/
                 return false;
@@ -153,21 +163,6 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         fab.setVisibility(View.GONE);
     }
 
-    private void showNoInternetConnectionAlertDialog() {
-        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Warning")
-                .setContentText("You must have internet connection to use this feature!")
-                .setConfirmText("OK")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        sDialog.dismissWithAnimation();
-                      /*  editSearch.setText(" ");*/
-                    }
-                })
-                .show();
-    }
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -191,19 +186,40 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
 
     public void toastNoInternetConnection() {
 
+        editSearch.setFocusable(false);
+        TAG_EDIT_SEARCH_DISABLE = "no";
         hideTheSoftKeyboardIfStillShown();
         fab.setVisibility(View.GONE);
 
-        Context context = getActivity().getApplicationContext();
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Warning!\nNo internet connection!", Snackbar.LENGTH_INDEFINITE)
+                .setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editSearch.setFocusableInTouchMode(true);
+                        TAG_EDIT_SEARCH_DISABLE = "yes";
+                    }
+                });
+        View view = snackbar.getView();
+        CoordinatorLayout.LayoutParams params
+                =(CoordinatorLayout.LayoutParams)view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        view.setLayoutParams(params);
+        // Changing message text color
+        snackbar.setActionTextColor(Color.RED);
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView snackbarTextView = (TextView)
+                sbView.findViewById(android.support.design.R.id.snackbar_text);
+        snackbarTextView.setMaxLines(3);
+        if (version >= 23) {
+            view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            snackbarTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.whitesmoke));
+        } else {
+            view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            snackbarTextView.setTextColor(getResources().getColor(R.color.whitesmoke));
 
-        View customToastroot = inflater.inflate(R.layout.mycustom_toast, null);
-        Toast customtoast = new Toast(context);
-        customtoast.setView(customToastroot);
-
-        customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL,0, 0);
-        customtoast.setDuration(Toast.LENGTH_LONG);
-        customtoast.show();
+        }
+        snackbar.show();
     }
 
     @Override
@@ -211,7 +227,7 @@ public class Pictures extends Fragment implements SearchJSONObjects.OnPhotosRece
         super.onResume();
         if (!internetConnectivityCheker.isOnline(getActivity())) {
             hideTheSoftKeyboardIfStillShown();
-            showNoInternetConnectionAlertDialog();
+            internetConnectivityCheker.showNoInternetConnectionAlertDialog(getActivity());
         }
         fab.setVisibility(View.GONE);
     }

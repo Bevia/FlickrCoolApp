@@ -48,3 +48,13 @@ Added Fabric for distribution and crashlytics for crash reporting solutions
             
             apply plugin: 'com.neenbedankt.android-apt'
           
+            Snapshots:
+            
+
+![main1](https://cloud.githubusercontent.com/assets/1615724/16981412/cbf7b0ae-4e6a-11e6-9f75-b9df88fe7d1d.png)
+
+![main2](https://cloud.githubusercontent.com/assets/1615724/16981425/d87614a6-4e6a-11e6-8dfc-7dd313ecfc05.png)
+
+![detail1](https://cloud.githubusercontent.com/assets/1615724/16981437/e7804ec6-4e6a-11e6-90e3-32a7865f46b5.png)
+
+

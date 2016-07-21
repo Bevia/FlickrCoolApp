@@ -355,11 +355,4 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        myOrientationEventListener.disable();
-    }
 }

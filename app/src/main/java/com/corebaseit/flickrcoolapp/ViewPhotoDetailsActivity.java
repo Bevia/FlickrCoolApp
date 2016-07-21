@@ -38,6 +38,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.ViewPropertyAnimation;
 import com.bumptech.glide.request.target.Target;
+import com.corebaseit.flickrcoolapp.utils.InternetConnectivityCheker;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -212,19 +213,36 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
         });
     }
 
+   /* @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){}
+    }*/
+
     private void rotateFullSizeImage() {
         myOrientationEventListener = new OrientationEventListener(ViewPhotoDetailsActivity.this,
                 SensorManager.SENSOR_DELAY_NORMAL) {
             @Override
-            public void onOrientationChanged(int orientation)
-            {
-                PORTRAIT_MODE = ((orientation < 100) || (orientation > 280));
-                /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + PORTRAIT_MODE);*/
+            public void onOrientationChanged(int orientation) {
+                if (orientation == -1) {
 
-                if(PORTRAIT_MODE==true){
-                    ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                }else{
-                    ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    //The device is flat: do nothing!
+                    /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "flat");*/
+
+                } else {
+
+                    PORTRAIT_MODE = ((orientation < 100) || (orientation > 280));
+                    /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + PORTRAIT_MODE);*/
+
+                    if (PORTRAIT_MODE == true) {
+                        ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "portrait");*/
+                    } else {
+                        ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                        /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "landscape");*/
+                    }
                 }
             }
         };

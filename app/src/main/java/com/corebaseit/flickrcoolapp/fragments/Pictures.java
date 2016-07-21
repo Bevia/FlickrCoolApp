@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.corebaseit.flickrcoolapp.InternetConnectivityCheker;
+import com.corebaseit.flickrcoolapp.utils.InternetConnectivityCheker;
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.adapters.PhotoAdapter;
 import com.corebaseit.flickrcoolapp.models.Photos;

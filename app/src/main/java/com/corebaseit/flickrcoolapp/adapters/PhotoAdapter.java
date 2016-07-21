@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.corebaseit.flickrcoolapp.InternetConnectivityCheker;
+import com.corebaseit.flickrcoolapp.utils.InternetConnectivityCheker;
 import com.corebaseit.flickrcoolapp.R;
 import com.corebaseit.flickrcoolapp.ViewPhotoDetailsActivity;
 import com.corebaseit.flickrcoolapp.models.Photo;

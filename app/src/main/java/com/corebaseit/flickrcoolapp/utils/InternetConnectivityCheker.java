@@ -1,4 +1,4 @@
-package com.corebaseit.flickrcoolapp;
+package com.corebaseit.flickrcoolapp.utils;
 
 
 import android.content.Context;

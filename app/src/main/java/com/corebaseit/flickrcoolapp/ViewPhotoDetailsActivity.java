@@ -5,10 +5,12 @@ import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -85,6 +88,8 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
     private Context context;
     private View decorView;
     private String TAG = "permissions";
+    private OrientationEventListener myOrientationEventListener;
+    public static boolean PORTRAIT_MODE = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,13 +170,15 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                    fullSizeImage.setVisibility(View.VISIBLE);
-                    mainScrollView.setVisibility(View.GONE);
-                    /**
-                     *   Moving to full SIZE Image, lets hide the toolbar and the navigation bar!
-                     */
-                    toolbar.setVisibility(View.GONE);
-                    hideNavigationBar();
+                fullSizeImage.setVisibility(View.VISIBLE);
+                mainScrollView.setVisibility(View.GONE);
+                /**
+                 *   Moving to full SIZE Image, lets hide the toolbar and the navigation bar!
+                 */
+                toolbar.setVisibility(View.GONE);
+                hideNavigationBar();
+
+                rotateFullSizeImage();
             }
         });
 
@@ -181,6 +188,7 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
 
                 fullSizeImage.setVisibility(View.GONE);
                 mainScrollView.setVisibility(View.VISIBLE);
+
                 /**
                  *   Recover the toolbar and the navigation bar!
                  */
@@ -188,6 +196,10 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                 decorView = getWindow().getDecorView();
                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
                 decorView.setSystemUiVisibility(uiOptions);
+
+                ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                myOrientationEventListener.disable();
+
             }
         });
 
@@ -196,9 +208,28 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Toast.makeText(ViewPhotoDetailsActivity.this, "Will be available in next version ;)", Toast.LENGTH_SHORT).show();
-
             }
         });
+    }
+
+    private void rotateFullSizeImage() {
+        myOrientationEventListener = new OrientationEventListener(ViewPhotoDetailsActivity.this,
+                SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation)
+            {
+                PORTRAIT_MODE = ((orientation < 100) || (orientation > 280));
+                /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + PORTRAIT_MODE);*/
+
+                if(PORTRAIT_MODE==true){
+                    ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }else{
+                    ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
+            }
+        };
+        Log.w("Listener", " can detect orientation: " + myOrientationEventListener.canDetectOrientation() + " ");
+        myOrientationEventListener.enable();
     }
 
     private void placeZoomImage() {
@@ -305,5 +336,12 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        myOrientationEventListener.disable();
     }
 }

@@ -30,7 +30,8 @@
 
         <activity
             android:name=".ViewPhotoDetailsActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <meta-data

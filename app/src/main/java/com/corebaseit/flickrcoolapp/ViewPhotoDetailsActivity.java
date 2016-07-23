@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -90,7 +91,10 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
     private View decorView;
     private String TAG = "permissions";
     private OrientationEventListener myOrientationEventListener;
-    public static boolean PORTRAIT_MODE = true;
+    private static boolean PORTRAIT_MODE;
+    private static boolean PORTRAIT_REVERSE_MODE;
+    private static boolean LANDSCAPE_MODE;
+    private static boolean LANDSCAPE_REVERSE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +183,14 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                 toolbar.setVisibility(View.GONE);
                 hideNavigationBar();
 
-                rotateFullSizeImage();
+                if (android.provider.Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1){
+                  /*  Toast.makeText(getApplicationContext(), "Auto Rotate is ON", Toast.LENGTH_SHORT).show();*/
+                     Log.w("ORIENTATION", "Auto Rotate is ON");
+                    rotateFullSizeImage();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Auto Rotate is OFF", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -221,27 +232,72 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){}
     }*/
 
+    /**
+     * ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+     * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+     * ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+     * ActivityInfo.SCREEN_ORIENTATION_USER
+     * ActivityInfo.SCREEN_ORIENTATION_BEHIND
+     * ActivityInfo.SCREEN_ORIENTATION_SENSOR
+     * ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+     * ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+     * ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+     * ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+     * ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+     * ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+     */
+
     private void rotateFullSizeImage() {
         myOrientationEventListener = new OrientationEventListener(ViewPhotoDetailsActivity.this,
                 SensorManager.SENSOR_DELAY_NORMAL) {
+
             @Override
             public void onOrientationChanged(int orientation) {
                 if (orientation == -1) {
-
                     //The device is flat: do nothing!
-                    /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "flat");*/
-
                 } else {
 
-                    PORTRAIT_MODE = ((orientation < 100) || (orientation > 280));
-                    /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + PORTRAIT_MODE);*/
+                    if ((orientation < 45) || (orientation >= 315)) {
+                        PORTRAIT_MODE = true;
+                    } else {
+                        PORTRAIT_MODE = false;
+                    }
+                    if ((orientation < 225) && (orientation >= 135)) {
+                        PORTRAIT_REVERSE_MODE = true;
+                    } else {
+                        PORTRAIT_REVERSE_MODE = false;
+                    }
+                    if ((orientation < 315) && (orientation >= 225)) {
+                        LANDSCAPE_MODE = true;
+                    } else {
+                        LANDSCAPE_MODE = false;
+                    }
+                    if ((orientation < 135) && (orientation > 45)) {
+                        LANDSCAPE_REVERSE = true;
+                    } else {
+                        LANDSCAPE_REVERSE = false;
+                    }
+
+                   /* Log.w("ORIENTATION", orientation + " PORTRAIT_MODE = " + PORTRAIT_MODE +
+                            "  " + PORTRAIT_REVERSE_MODE +
+                            "  " + LANDSCAPE_MODE +
+                            "  " + LANDSCAPE_REVERSE);*/
 
                     if (PORTRAIT_MODE == true) {
                         ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                        /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "portrait");*/
-                    } else {
+                       /* Log.w("ORIENTATION", orientation + " PORTRAIT_MODE = " + "portrait");*/
+                    }
+                    if (PORTRAIT_REVERSE_MODE == true) {
+                        ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                       /* Log.w("ORIENTATION", orientation + " PORTRAIT_MODE = " + "portrait reverse");*/
+                    }
+                    if (LANDSCAPE_REVERSE == true) {
+                        ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                      /*  Log.w("ORIENTATION", orientation + " PORTRAIT_MODE = " + "landscape");*/
+                    }
+                    if (LANDSCAPE_MODE == true) {
                         ViewPhotoDetailsActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        /*Log.w("Orient", orientation + " PORTRAIT_MODE = " + "landscape");*/
+                        /*Log.w("ORIENTATION", orientation + " PORTRAIT_MODE = " + "landscape reverse");*/
                     }
                 }
             }

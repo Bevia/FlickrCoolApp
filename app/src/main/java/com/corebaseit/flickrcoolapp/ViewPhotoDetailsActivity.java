@@ -171,6 +171,17 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                     }
                 });
 
+        myOrientationEventListener = new OrientationEventListener(this,
+                SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+            }
+        };
+        if (myOrientationEventListener.canDetectOrientation() == true) {
+            Log.w("ORIENTATION", "myOrientationEventListener is disable");
+            myOrientationEventListener.disable();
+        }
+
         photoImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,13 +194,16 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
                 toolbar.setVisibility(View.GONE);
                 hideNavigationBar();
 
-                if (android.provider.Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1){
+                if (android.provider.Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1) {
                   /*  Toast.makeText(getApplicationContext(), "Auto Rotate is ON", Toast.LENGTH_SHORT).show();*/
-                     Log.w("ORIENTATION", "Auto Rotate is ON");
+                    Log.w("ORIENTATION", "Auto Rotate is ON");
                     rotateFullSizeImage();
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "Auto Rotate is OFF", Toast.LENGTH_SHORT).show();
+                    if (myOrientationEventListener.canDetectOrientation() == true) {
+                        myOrientationEventListener.disable();
+                        Log.w("ORIENTATION", "myOrientationEventListener is disable");
+                    }
                 }
             }
         });
@@ -224,14 +238,6 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
         });
     }
 
-   /* @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){}
-    }*/
-
     /**
      * ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
      * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -248,6 +254,7 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
      */
 
     private void rotateFullSizeImage() {
+
         myOrientationEventListener = new OrientationEventListener(ViewPhotoDetailsActivity.this,
                 SensorManager.SENSOR_DELAY_NORMAL) {
 
@@ -304,6 +311,7 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
         };
         Log.w("Listener", " can detect orientation: " + myOrientationEventListener.canDetectOrientation() + " ");
         myOrientationEventListener.enable();
+        Log.w("ORIENTATION", "myOrientationEventListener is enable");
     }
 
     private void placeZoomImage() {

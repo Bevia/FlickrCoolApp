@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -233,9 +234,18 @@ public class ViewPhotoDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(ViewPhotoDetailsActivity.this, "Will be available in next version ;)", Toast.LENGTH_SHORT).show();
+                toastNoInternetConnection();
             }
         });
+    }
+    public void toastNoInternetConnection() {
+
+        Toast toast = Toast.makeText(ViewPhotoDetailsActivity.this,"\nThis feature \nWill be available in next version ;)\n", Toast.LENGTH_LONG);
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        if( v != null) v.setGravity(Gravity.CENTER);
+        toast.show();
+
     }
 
     /**
